@@ -4,6 +4,7 @@
     lineHeight: 190,
     fontKey: "droid-arabic-naskh",
   };
+  const textSizeBounds = { min: 100, max: 350 };
   const fontStacks = {
     "droid-arabic-naskh": "'Droid Arabic Naskh', serif",
     "noto-naskh-arabic": "'Noto Naskh Arabic', 'Droid Arabic Naskh', serif",
@@ -37,6 +38,7 @@
   let settings = { ...defaults };
   let observer;
   let scheduled = false;
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const queueTask = (callback) => {
     if (typeof queueMicrotask === "function") {
       queueMicrotask(callback);
@@ -168,7 +170,11 @@
 
   const applySettings = (values) => {
     settings = {
-      textSize: toPercentage(values.textSize, defaults.textSize),
+      textSize: clamp(
+        toPercentage(values.textSize, defaults.textSize),
+        textSizeBounds.min,
+        textSizeBounds.max
+      ),
       lineHeight: toPercentage(values.lineHeight, defaults.lineHeight),
       fontKey: normalizeFontKey(values.fontKey),
     };
@@ -197,9 +203,10 @@
     }
     const nextValues = { ...settings };
     if (Object.prototype.hasOwnProperty.call(changes, "textSize")) {
-      nextValues.textSize = toPercentage(
-        changes.textSize.newValue,
-        defaults.textSize
+      nextValues.textSize = clamp(
+        toPercentage(changes.textSize.newValue, defaults.textSize),
+        textSizeBounds.min,
+        textSizeBounds.max
       );
     }
     if (Object.prototype.hasOwnProperty.call(changes, "lineHeight")) {
