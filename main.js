@@ -37,6 +37,13 @@
   let settings = { ...defaults };
   let observer;
   let scheduled = false;
+  const queueTask = (callback) => {
+    if (typeof queueMicrotask === "function") {
+      queueMicrotask(callback);
+      return;
+    }
+    Promise.resolve().then(callback);
+  };
 
   const toPercentage = (value, fallback) => {
     const numeric = Number(value);
@@ -131,7 +138,7 @@
       return;
     }
     scheduled = true;
-    queueMicrotask(processTextNodes);
+    queueTask(processTextNodes);
   };
 
   const ensureObserver = () => {
@@ -165,6 +172,7 @@
       lineHeight: toPercentage(values.lineHeight, defaults.lineHeight),
       fontKey: normalizeFontKey(values.fontKey),
     };
+    updateExistingSpans();
     scheduleProcessing();
   };
 
