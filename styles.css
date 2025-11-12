@@ -15,9 +15,7 @@
 }
 
 .ar {
-  font-size: 110%;
-  font-family: "Droid Arabic Naskh", serif;
+  font-family: inherit;
   margin: 10px 2px;
   padding: 0 2px;
-  line-height: 1.9;
 }

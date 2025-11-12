@@ -34,6 +34,28 @@
         text-align: center;
       }
 
+      .select-wrapper {
+        width: 90%;
+        margin: 0 auto 16px;
+        text-align: left;
+      }
+
+      .select-wrapper label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 6px;
+      }
+
+      select {
+        width: 100%;
+        padding: 6px 8px;
+        border: 1px solid #ccd3d9;
+        border-radius: 4px;
+        background-color: #fff;
+        font-size: 0.95em;
+        color: #1f2933;
+      }
+
       footer {
         color: #666;
         text-align: center;
@@ -104,6 +126,23 @@
       <bdi dir="rtl" lang="ar">حروف</bdi>
     </header>
     <div role="main">
+      <div class="select-wrapper">
+        <label for="fontFamily">Font Family</label>
+        <select id="fontFamily" name="fontFamily" aria-label="Font family">
+          <option value="droid-arabic-naskh">
+            Droid Arabic Naskh (default)
+          </option>
+          <option value="noto-naskh-arabic">Noto Naskh Arabic</option>
+          <option value="amiri">Amiri</option>
+          <option value="scheherazade-new">Scheherazade New</option>
+          <option value="lateef">Lateef</option>
+          <option value="reem-kufi">Reem Kufi</option>
+          <option value="tajawal">Tajawal</option>
+          <option value="markazi-text">Markazi Text</option>
+          <option value="cairo">Cairo</option>
+          <option value="ibm-plex-sans-arabic">IBM Plex Sans Arabic</option>
+        </select>
+      </div>
       <table>
         <tr>
           <td class="label">Font Size</td>
