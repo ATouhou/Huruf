@@ -1,53 +1,54 @@
-(function () {
-	chrome.storage.sync.get(['textSize', 'lineHeight'], function(e) {
-		var textSize = e.textSize;
-		var lineHeight = e.lineHeight;
+(() => {
+  const defaults = { textSize: 130, lineHeight: 190 };
+  const regexArabicScript =
+    /([\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+(?:[ \u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\W\d]+)*)/g;
 
-		var regex_arabic_script = new RegExp('([\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF]+( [\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF\W\d]+)*)', 'g');
+  const toPercentage = (value, fallback) => {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) ? numeric : fallback;
+  };
 
-		function getTextNodes() {
+  const replaceNodeWithHtml = (node, html) => {
+    const parent = node.parentNode;
+    if (!parent) {
+      return;
+    }
+    const next = node.nextSibling;
+    const parser = document.createElement("div");
+    parser.innerHTML = html;
+    while (parser.firstChild) {
+      parent.insertBefore(parser.firstChild, next);
+    }
+    parent.removeChild(node);
+  };
 
-			var walker = document.createTreeWalker(
-				document.body,
-				NodeFilter.SHOW_TEXT,
-				null,
-				false
-			);
+  const getTextNodes = () => {
+    const walker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT
+    );
+    const textNodes = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      if (node.nodeValue.trim() && regexArabicScript.test(node.nodeValue)) {
+        textNodes.push(node);
+      }
+      regexArabicScript.lastIndex = 0;
+    }
+    return textNodes;
+  };
 
-			var node;
-			var textNodes = [];
-
-			while (node = walker.nextNode()) {
-				if ((node.nodeValue.trim() != "") && (node.nodeValue.match(regex_arabic_script))) {
-					textNodes.push(node);
-				}
-			}
-			return textNodes;
-		}
-
-		function setClass(node, html) {
-			var parent = node.parentNode;
-			if (!parent) return;
-			var next = node.nextSibling;
-			var parser = document.createElement('div');
-			parser.innerHTML = html;
-			while (parser.firstChild) {
-				parent.insertBefore(parser.firstChild, next);
-			}
-			parent.removeChild(node);
-		}
-
-		function setLang() {
-
-			var textNodes = getTextNodes();
-			for (var i = 0; i < textNodes.length; i++) {
-				setClass(
-					textNodes[i],
-					textNodes[i].nodeValue.replace(regex_arabic_script, "<span class='ar' style='font-size:" + (textSize / 100) + "em; line-height:" + (lineHeight / 100) + "em;'>$&</span>")
-				);
-			}
-		}
-
-		setLang();
-	});
+  chrome.storage.sync.get(defaults, ({ textSize, lineHeight }) => {
+    const fontSizeEm = toPercentage(textSize, defaults.textSize) / 100;
+    const lineHeightEm = toPercentage(lineHeight, defaults.lineHeight) / 100;
+    getTextNodes().forEach((node) => {
+      replaceNodeWithHtml(
+        node,
+        node.nodeValue.replace(
+          regexArabicScript,
+          `<span class="ar" style="font-size:${fontSizeEm}em; line-height:${lineHeightEm}em;">$&</span>`
+        )
+      );
+    });
+  });
 })();

@@ -1,33 +1,38 @@
 {
-	"manifest_version": 2,
-	"name": "Huruf",
-	"short_name": "SHuruf",
-	"description": "Automatically increases the size of Arabic text.",
-	"version": "2.0",
-	"minimum_chrome_version": "38",
-	"permissions": [
-		"storage"
-	],
-
-	"options_page": "popup.html",
-
-	"browser_action": {
-		"default_icon": "assets/huruf.png",
-		"default_popup": "popup.html"
-	},
-
-	"icons": {
-		"16": "assets/huruf.png",
-		"128": "assets/huruf.png"
-	},
-
-	"content_scripts": [
-		{
-			"matches": ["<all_urls>"],
-			"js": ["main.js"],
-			"css": ["styles.css"]
-		}
-	],
-
-	"web_accessible_resources": ["main.js", "fonts/*"]
+  "manifest_version": 3,
+  "name": "Huruf",
+  "short_name": "SHuruf",
+  "description": "Automatically increases the size of Arabic text.",
+  "version": "3.0.0",
+  "minimum_chrome_version": "109",
+  "permissions": ["storage"],
+  "options_page": "popup.html",
+  "action": {
+    "default_icon": {
+      "16": "assets/huruf.png",
+      "32": "assets/huruf.png",
+      "48": "assets/huruf.png"
+    },
+    "default_popup": "popup.html",
+    "default_title": "Huruf"
+  },
+  "icons": {
+    "16": "assets/huruf.png",
+    "32": "assets/huruf.png",
+    "48": "assets/huruf.png",
+    "128": "assets/huruf.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["main.js"],
+      "css": ["styles.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["fonts/*.woff", "fonts/*.woff2"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

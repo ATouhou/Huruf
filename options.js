@@ -1,37 +1,33 @@
-function save_options() {
-	var s = parseInt(document.getElementById('size').value);
-	var h = parseInt(document.getElementById('height').value);
-	chrome.storage.sync.set({
-		textSize: s,
-		lineHeight: h,
-		}, function() {
-	});
-}
+(() => {
+  const defaults = { textSize: 130, lineHeight: 190 };
+  const sizeInput = document.getElementById("size");
+  const heightInput = document.getElementById("height");
+  const sizeValue = document.getElementById("sizeValue");
+  const heightValue = document.getElementById("heightValue");
 
-function restore_options() {
-	chrome.storage.sync.get({
-	textSize: '130',
-	lineHeight: '190',
-	}, function(items) {
-		document.getElementById('size').value = items.textSize;
-		document.getElementById('sizeValue').innerHTML = items.textSize + '%';
-		document.getElementById('height').value = items.lineHeight;
-		document.getElementById('heightValue').innerHTML = items.lineHeight + '%';
-	});
-}
+  const updateDisplay = () => {
+    sizeValue.textContent = `${sizeInput.value}%`;
+    heightValue.textContent = `${heightInput.value}%`;
+  };
 
-function updateSize() {
-	document.getElementById('sizeValue').innerHTML = document.getElementById('size').value + '%';
-}
+  const saveOptions = () => {
+    chrome.storage.sync.set({
+      textSize: Number(sizeInput.value),
+      lineHeight: Number(heightInput.value),
+    });
+  };
 
-function updateHeight() {
-	document.getElementById('heightValue').innerHTML = document.getElementById('height').value + '%';
-}
+  const handleInput = () => {
+    updateDisplay();
+    saveOptions();
+  };
 
-document.addEventListener('DOMContentLoaded', restore_options);
+  chrome.storage.sync.get(defaults, ({ textSize, lineHeight }) => {
+    sizeInput.value = textSize;
+    heightInput.value = lineHeight;
+    updateDisplay();
+  });
 
-document.getElementById('size').addEventListener('mouseup', save_options);
-document.getElementById('height').addEventListener('mouseup', save_options);
-
-document.getElementById('size').addEventListener('mousemove', updateSize);
-document.getElementById('height').addEventListener('mousemove', updateHeight);
+  sizeInput.addEventListener("input", handleInput);
+  heightInput.addEventListener("input", handleInput);
+})();

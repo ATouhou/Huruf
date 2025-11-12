@@ -1,19 +1,23 @@
 @font-face {
-	font-family: 'Droid Arabic Naskh';
-	font-style: normal;
-	font-weight: 400;
-	src: url('chrome-extension://__MSG_@@extension_id__/fonts/DroidNaskh-Regular.woff2') format('woff2');
+  font-family: "Droid Arabic Naskh";
+  font-style: normal;
+  font-weight: 400;
+  src: url("fonts/DroidNaskh-Regular.woff2") format("woff2"),
+    url("fonts/DroidNaskh-Regular.woff") format("woff");
 }
+
 @font-face {
-	font-family: 'Droid Arabic Naskh';
-	font-style: normal;
-	font-weight: 700;
-	src: url('chrome-extension://__MSG_@@extension_id__/fonts/DroidNaskh-Bold.woff2') format('woff2'),;
+  font-family: "Droid Arabic Naskh";
+  font-style: normal;
+  font-weight: 700;
+  src: url("fonts/DroidNaskh-Bold.woff2") format("woff2"),
+    url("fonts/DroidNaskh-Bold.woff") format("woff");
 }
-[class="ar"] {
-	font-size: 110%;
-	font-family: 'Droid Arabic Naskh', serif;
-	margin: 10px, 2px;
-	padding: 0 2px;
-	line-height: 1.9em;
+
+.ar {
+  font-size: 110%;
+  font-family: "Droid Arabic Naskh", serif;
+  margin: 10px 2px;
+  padding: 0 2px;
+  line-height: 1.9;
 }
